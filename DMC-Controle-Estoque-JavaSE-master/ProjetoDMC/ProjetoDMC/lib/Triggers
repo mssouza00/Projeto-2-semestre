@@ -1,0 +1,40 @@
+CREATE TRIGGER tInsert_Estoque
+         AFTER INSERT
+            ON Estoque
+BEGIN
+    INSERT INTO Produto_Estoque (
+                                    IdEStoque,
+                                    Entrada
+                                )
+                                VALUES (
+                                    new.IdProduto,
+                                    date('now') 
+                                );
+END;
+
+
+CREATE TRIGGER tDesactive_Estoque
+         AFTER UPDATE
+            ON Estoque
+          WHEN new.Status = 0
+BEGIN
+    DELETE FROM Produto_Estoque
+          WHERE IdEstoque = new.IdProduto;
+END;
+
+
+CREATE TRIGGER tActive_Estoque
+         AFTER UPDATE
+            ON Estoque
+          WHEN new.Status = 1
+BEGIN
+    INSERT INTO Produto_Estoque (
+                                    IdEstoque,
+                                    Entrada
+                                )
+                                VALUES (
+                                    new.IdProduto,
+                                    date('now') 
+                                );
+END;
+
